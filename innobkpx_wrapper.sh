@@ -40,19 +40,13 @@ fi
 #Retain last 14 logfiles
 FILEPAR1=${OUTDIR}/logs/*.log
 RETAIN=14
-KEEPFILES=(`ls -lrt ${FILEPAR1}| tail -n ${RETAIN}| awk '{print $9}'`)
-for i in `ls -lrt ${FILEPAR1} | awk '{print $9}'`; do 
-	preserve=0; 
- 	#Check whether this file is in files array:
- 		for a in ${KEEPFILES[@]}; do 
-  			if [ $i == $a ]; then 
-   			preserve=1; 
-  			fi; 
- 		done; 
- 	if [ $preserve == 0 ]; then 
-        echo ${TODAY}-${NOW} Removed $i                                                                2>&1 >> ${LOGFILE}
-        rm -f $i                                                                                       2>&1 >> ${LOGFILE}
- 	fi;
+FILES=(`ls -lt ${FILEPAR1}| awk '{print $9}'`)
+FLEN=${#FILES[@]}
+ 
+for (( i=${RETAIN}; i<${FLEN}; i++ ));
+do
+  echo ${TODAY}-${NOW} Removed $i                                                                      2>&1 >> ${LOGFILE}
+  rm -f ${FILES[$i]}                                                                                   2>&1 >> ${LOGFILE}
 done
 ###
 
